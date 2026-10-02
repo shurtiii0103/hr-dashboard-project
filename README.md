@@ -5,45 +5,14 @@ A two-page **Power BI** HR dashboard taken from raw mock data to a documented, v
 <img width="3000" height="1410" alt="development-cycle" src="https://github.com/user-attachments/assets/ec30d88e-4420-4e28-90b7-75d69059bbce" />
 
 ---
-
 ## 📊 The Dashboard
  
-This Power BI dashboard is split into two pages, providing an overview of workforce trends, employee engagement, compensation, and performance metrics.
- 
 | Workforce Overview | Pay & Performance |
-|-------------------|-------------------|
+|---|---|
 | ![Workforce Overview](https://github.com/user-attachments/assets/819dd6c4-8e33-43a2-a446-7cc58b3e62ca) | ![Pay & Performance](https://github.com/user-attachments/assets/830280e8-3431-479f-ac55-320d05566844) |
- 
-### 📈 Workforce Overview
- 
-**Key KPIs**
-- Headcount
-- Attrition Rate
-- Average Absence Days
-- Average Engagement Score
- 
-**Visuals**
-- Headcount trend with hires and exits (quarter → month drill-through)
-- Attrition by department vs company average
-- Gender distribution by job level
-- Exit reasons (voluntary vs involuntary)
- 
----
- 
-### 💰 Pay & Performance
- 
-**Key KPIs**
-- Average Monthly Salary
-- Average Performance Rating
-- Average Training Hours
-- Average Overtime Hours
- 
-**Visuals**
-- Salary by job level and gender
-- Performance rating distribution
-- Attrition and engagement by rating
-- Training vs overtime hours by department
- 
+| **KPIs**<br><br>• Headcount<br>• Attrition Rate<br>• Avg Absence Days<br>• Avg Engagement Score<br><br>Each KPI is compared with the previous year. | **KPIs**<br><br>• Avg Monthly Salary<br>• Avg Performance Rating<br>• Avg Training Hours<br>• Avg Overtime Hours<br><br>Each KPI is compared with the previous year. |
+| **Visuals**<br><br>• Headcount trend with hires and exits, with quarter-to-month drill<br>• Attrition by department vs company average<br>• Gender split by job level<br>• Exit reasons by voluntary and involuntary exits | **Visuals**<br><br>• Salary by job level and gender<br>• Performance rating distribution<br>• Attrition and engagement by rating<br>• Training vs overtime by department |
+| **Synced filters:** Year · Month · Department · Job Level · Gender · Age Band · Location · Employment Type · Reset | **Synced filters:** Year · Month · Department · Job Level · Gender · Age Band · Location · Employment Type · Reset |
 ---
  
 ### 🔍 Global Filters
