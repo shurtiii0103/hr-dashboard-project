@@ -1,0 +1,503 @@
+table _measures
+	lineageTag: dbc6341b-614a-4ffe-910c-9f254c46e5e7
+
+	/// Active employees in the latest month of the selected period (end-of-period headcount).
+	measure Headcount =
+			VAR _lastMonth = MAX ( HR_Data[Snapshot_Month] )
+			RETURN
+			    CALCULATE ( COUNTROWS ( HR_Data ), HR_Data[Snapshot_Month] = _lastMonth )
+		formatString: #,##0
+		displayFolder: 1. Workforce
+		lineageTag: c814ed3c-e4ba-4eb6-80a7-8325420421bd
+
+	/// Employees who joined during the selected period.
+	measure 'New Hires' = CALCULATE ( COUNTROWS ( HR_Data ), HR_Data[New_Hire_Flag] = 1 )
+		formatString: #,##0
+		displayFolder: 1. Workforce
+		lineageTag: 70e73989-dcaa-4a49-954a-801cba575b35
+
+	/// Employees who left during the selected period.
+	measure Exits = CALCULATE ( COUNTROWS ( HR_Data ), HR_Data[Exit_Flag] = 1 )
+		formatString: #,##0
+		displayFolder: 1. Workforce
+		lineageTag: 9145a24c-ddd9-43c4-a1b4-d87a7b1b2986
+
+	/// New hires minus exits.
+	measure 'Net Change' = [New Hires] - [Exits]
+		formatString: +#,##0;-#,##0;0
+		displayFolder: 1. Workforce
+		lineageTag: bd441741-8406-4f9d-960d-8c4c0ec0d219
+
+	/// Average monthly headcount across the months in the selected period.
+	measure 'Avg Monthly Headcount' = AVERAGEX ( VALUES ( HR_Data[Snapshot_Month] ), CALCULATE ( COUNTROWS ( HR_Data ) ) )
+		formatString: #,##0
+		displayFolder: 1. Workforce
+		lineageTag: f01937f6-0818-4b6d-9109-d5cd99339c8c
+
+	/// Exits divided by average monthly headcount for the selected period.
+	measure 'Attrition Rate' = DIVIDE ( [Exits], [Avg Monthly Headcount] )
+		formatString: 0.0%
+		displayFolder: 1. Workforce
+		lineageTag: 85831165-63fa-416d-ae58-0a6e4fc70b6a
+
+	/// Average unplanned absence days per employee per month.
+	measure 'Avg Absence Days' = AVERAGE ( HR_Data[Absence_Days] )
+		formatString: 0.00
+		displayFolder: 1. Workforce
+		lineageTag: 5f5a9df2-2931-4b0e-8ead-bc2ae5bc0cdf
+
+	/// Average monthly engagement score (1-5).
+	measure 'Avg Engagement Score' = AVERAGE ( HR_Data[Engagement_Score] )
+		formatString: 0.00
+		displayFolder: 1. Workforce
+		lineageTag: 5e2a83c5-090c-43e2-90fd-b3a15840ba8e
+
+	/// Average base monthly salary in MYR.
+	measure 'Avg Monthly Salary' = AVERAGE ( HR_Data[Monthly_Salary_MYR] )
+		formatString: "MYR" #,##0
+		displayFolder: 2. Pay & Performance
+		lineageTag: e9d4e5de-418b-4088-82bb-4ef27c0e6e13
+
+	/// Average performance rating (1-5).
+	measure 'Avg Performance Rating' = AVERAGE ( HR_Data[Performance_Rating] )
+		formatString: 0.00
+		displayFolder: 2. Pay & Performance
+		lineageTag: 36ae45ef-e441-488c-8503-27f79d6cf9e7
+
+	/// Average training hours per employee per month.
+	measure 'Avg Training Hours' = AVERAGE ( HR_Data[Training_Hours] )
+		formatString: 0.00
+		displayFolder: 2. Pay & Performance
+		lineageTag: 79a09476-0269-4b60-ad31-1ae51894cb94
+
+	/// Average overtime hours per employee per month.
+	measure 'Avg Overtime Hours' = AVERAGE ( HR_Data[Overtime_Hours] )
+		formatString: 0.00
+		displayFolder: 2. Pay & Performance
+		lineageTag: f42ebbd9-9c00-4c73-a746-1e635a7de3f7
+
+	/// Headcount for the same months one year earlier.
+	measure 'Headcount PY' =
+			VAR _pyMonths =
+			    SELECTCOLUMNS (
+			        VALUES ( HR_Data[Snapshot_Month] ),
+			        "PY Month", INT ( EDATE ( DATE ( 1899, 12, 30 ) + HR_Data[Snapshot_Month], -12 ) - DATE ( 1899, 12, 30 ) )
+			    )
+			RETURN
+			    CALCULATE (
+			        [Headcount],
+			        REMOVEFILTERS ( HR_Data[Year], HR_Data[Month], HR_Data[Month No], HR_Data[Snapshot_Month], HR_Data[Year Month], HR_Data[Year Quarter], HR_Data[Year Quarter No] ),
+			        TREATAS ( _pyMonths, HR_Data[Snapshot_Month] )
+			    )
+		formatString: #,##0
+		displayFolder: 1. Workforce\Previous Year
+		lineageTag: be4697de-cd85-40cd-b0c3-16b448553efc
+
+	/// KPI card caption: previous-year value for Headcount.
+	measure 'Headcount PY Label' =
+			VAR _py = [Headcount PY]
+			RETURN
+			    "As of " & FORMAT ( DATE ( 1899, 12, 30 ) + MAX ( HR_Data[Snapshot_Month] ), "mmm yyyy" ) & " · " & "Previous Year: " & IF ( ISBLANK ( _py ), "n/a", FORMAT ( _py, "#,##0" ) )
+		displayFolder: 1. Workforce\KPI Labels
+		lineageTag: da583bf2-efbf-46bc-a6a0-2b1585e5c0bf
+
+	/// KPI card delta vs previous year for Headcount.
+	measure 'Headcount Change Label' =
+			VAR _cur = [Headcount]
+			VAR _py = [Headcount PY]
+			VAR _chg = DIVIDE ( _cur - _py, _py )
+			RETURN
+			    IF ( ISBLANK ( _py ) || ISBLANK ( _cur ), BLANK (), IF ( _chg > 0, "▲ ", IF ( _chg < 0, "▼ ", "■ " ) ) & FORMAT ( ABS ( _chg ), "0.0%" ) )
+		displayFolder: 1. Workforce\KPI Labels
+		lineageTag: 4d28ef3e-5651-4f71-b4d5-d59335204939
+
+	/// Green when the change is favourable, red when not.
+	measure 'Headcount Change Color' =
+			VAR _cur = [Headcount]
+			VAR _py = [Headcount PY]
+			RETURN
+			    IF ( ISBLANK ( _py ) || ISBLANK ( _cur ), "#8C8C8C", IF ( _cur >= _py, "#008E60", "#D8211D" ) )
+		isHidden
+		displayFolder: 1. Workforce\KPI Labels
+		lineageTag: 411b5c00-d67d-4ae3-9968-c9d0dd61711b
+
+	/// Attrition Rate for the same months one year earlier.
+	measure 'Attrition Rate PY' =
+			VAR _pyMonths =
+			    SELECTCOLUMNS (
+			        VALUES ( HR_Data[Snapshot_Month] ),
+			        "PY Month", INT ( EDATE ( DATE ( 1899, 12, 30 ) + HR_Data[Snapshot_Month], -12 ) - DATE ( 1899, 12, 30 ) )
+			    )
+			RETURN
+			    CALCULATE (
+			        [Attrition Rate],
+			        REMOVEFILTERS ( HR_Data[Year], HR_Data[Month], HR_Data[Month No], HR_Data[Snapshot_Month], HR_Data[Year Month], HR_Data[Year Quarter], HR_Data[Year Quarter No] ),
+			        TREATAS ( _pyMonths, HR_Data[Snapshot_Month] )
+			    )
+		formatString: 0.0%
+		displayFolder: 1. Workforce\Previous Year
+		lineageTag: ebc15592-77d4-43d6-bf42-e699c78db01e
+
+	/// KPI card caption: previous-year value for Attrition Rate.
+	measure 'Attrition Rate PY Label' =
+			VAR _py = [Attrition Rate PY]
+			RETURN
+			    "Previous Year: " & IF ( ISBLANK ( _py ), "n/a", FORMAT ( _py, "0.0%" ) )
+		displayFolder: 1. Workforce\KPI Labels
+		lineageTag: c2e8764f-54a7-4481-92c6-b624e958192c
+
+	/// KPI card delta vs previous year for Attrition Rate.
+	measure 'Attrition Rate Change Label' =
+			VAR _cur = [Attrition Rate]
+			VAR _py = [Attrition Rate PY]
+			VAR _chg = ( _cur - _py ) * 100
+			RETURN
+			    IF ( ISBLANK ( _py ) || ISBLANK ( _cur ), BLANK (), IF ( _chg > 0, "▲ ", IF ( _chg < 0, "▼ ", "■ " ) ) & FORMAT ( ABS ( _chg ), "0.0" ) & " pts" )
+		displayFolder: 1. Workforce\KPI Labels
+		lineageTag: 74702a28-e3b0-4c15-9296-0ff2b9596b07
+
+	/// Green when the change is favourable, red when not (lower is better).
+	measure 'Attrition Rate Change Color' =
+			VAR _cur = [Attrition Rate]
+			VAR _py = [Attrition Rate PY]
+			RETURN
+			    IF ( ISBLANK ( _py ) || ISBLANK ( _cur ), "#8C8C8C", IF ( _cur <= _py, "#008E60", "#D8211D" ) )
+		isHidden
+		displayFolder: 1. Workforce\KPI Labels
+		lineageTag: e3df9e8b-3de4-4be8-a3e8-39c696118709
+
+	/// Avg Absence Days for the same months one year earlier.
+	measure 'Avg Absence Days PY' =
+			VAR _pyMonths =
+			    SELECTCOLUMNS (
+			        VALUES ( HR_Data[Snapshot_Month] ),
+			        "PY Month", INT ( EDATE ( DATE ( 1899, 12, 30 ) + HR_Data[Snapshot_Month], -12 ) - DATE ( 1899, 12, 30 ) )
+			    )
+			RETURN
+			    CALCULATE (
+			        [Avg Absence Days],
+			        REMOVEFILTERS ( HR_Data[Year], HR_Data[Month], HR_Data[Month No], HR_Data[Snapshot_Month], HR_Data[Year Month], HR_Data[Year Quarter], HR_Data[Year Quarter No] ),
+			        TREATAS ( _pyMonths, HR_Data[Snapshot_Month] )
+			    )
+		formatString: 0.00
+		displayFolder: 1. Workforce\Previous Year
+		lineageTag: 037def44-6168-48d2-82f1-2beab9e2a972
+
+	/// KPI card caption: previous-year value for Avg Absence Days.
+	measure 'Avg Absence Days PY Label' =
+			VAR _py = [Avg Absence Days PY]
+			RETURN
+			    "Previous Year: " & IF ( ISBLANK ( _py ), "n/a", FORMAT ( _py, "0.00" ) )
+		displayFolder: 1. Workforce\KPI Labels
+		lineageTag: c0258c0a-e86c-4bcd-b117-8418186b8468
+
+	/// KPI card delta vs previous year for Avg Absence Days.
+	measure 'Avg Absence Days Change Label' =
+			VAR _cur = [Avg Absence Days]
+			VAR _py = [Avg Absence Days PY]
+			VAR _chg = DIVIDE ( _cur - _py, _py )
+			RETURN
+			    IF ( ISBLANK ( _py ) || ISBLANK ( _cur ), BLANK (), IF ( _chg > 0, "▲ ", IF ( _chg < 0, "▼ ", "■ " ) ) & FORMAT ( ABS ( _chg ), "0.0%" ) )
+		displayFolder: 1. Workforce\KPI Labels
+		lineageTag: 87fa4035-ea99-4ffb-a38e-d2d851d40054
+
+	/// Green when the change is favourable, red when not (lower is better).
+	measure 'Avg Absence Days Change Color' =
+			VAR _cur = [Avg Absence Days]
+			VAR _py = [Avg Absence Days PY]
+			RETURN
+			    IF ( ISBLANK ( _py ) || ISBLANK ( _cur ), "#8C8C8C", IF ( _cur <= _py, "#008E60", "#D8211D" ) )
+		isHidden
+		displayFolder: 1. Workforce\KPI Labels
+		lineageTag: 3be270cc-02f0-43cd-bf65-6c0d917be009
+
+	/// Avg Engagement Score for the same months one year earlier.
+	measure 'Avg Engagement Score PY' =
+			VAR _pyMonths =
+			    SELECTCOLUMNS (
+			        VALUES ( HR_Data[Snapshot_Month] ),
+			        "PY Month", INT ( EDATE ( DATE ( 1899, 12, 30 ) + HR_Data[Snapshot_Month], -12 ) - DATE ( 1899, 12, 30 ) )
+			    )
+			RETURN
+			    CALCULATE (
+			        [Avg Engagement Score],
+			        REMOVEFILTERS ( HR_Data[Year], HR_Data[Month], HR_Data[Month No], HR_Data[Snapshot_Month], HR_Data[Year Month], HR_Data[Year Quarter], HR_Data[Year Quarter No] ),
+			        TREATAS ( _pyMonths, HR_Data[Snapshot_Month] )
+			    )
+		formatString: 0.00
+		displayFolder: 1. Workforce\Previous Year
+		lineageTag: 13e45629-e081-467f-9c40-70874a568ab1
+
+	/// KPI card caption: previous-year value for Avg Engagement Score.
+	measure 'Avg Engagement Score PY Label' =
+			VAR _py = [Avg Engagement Score PY]
+			RETURN
+			    "Previous Year: " & IF ( ISBLANK ( _py ), "n/a", FORMAT ( _py, "0.00" ) )
+		displayFolder: 1. Workforce\KPI Labels
+		lineageTag: 765a1c82-a7ce-4f2d-8fa1-21c7a6824134
+
+	/// KPI card delta vs previous year for Avg Engagement Score.
+	measure 'Avg Engagement Score Change Label' =
+			VAR _cur = [Avg Engagement Score]
+			VAR _py = [Avg Engagement Score PY]
+			VAR _chg = DIVIDE ( _cur - _py, _py )
+			RETURN
+			    IF ( ISBLANK ( _py ) || ISBLANK ( _cur ), BLANK (), IF ( _chg > 0, "▲ ", IF ( _chg < 0, "▼ ", "■ " ) ) & FORMAT ( ABS ( _chg ), "0.0%" ) )
+		displayFolder: 1. Workforce\KPI Labels
+		lineageTag: 819165e1-69c1-4cca-9ca5-78a796814fc5
+
+	/// Green when the change is favourable, red when not.
+	measure 'Avg Engagement Score Change Color' =
+			VAR _cur = [Avg Engagement Score]
+			VAR _py = [Avg Engagement Score PY]
+			RETURN
+			    IF ( ISBLANK ( _py ) || ISBLANK ( _cur ), "#8C8C8C", IF ( _cur >= _py, "#008E60", "#D8211D" ) )
+		isHidden
+		displayFolder: 1. Workforce\KPI Labels
+		lineageTag: 32b3d926-331c-4dcc-953c-6c7a65064ba6
+
+	/// Avg Monthly Salary for the same months one year earlier.
+	measure 'Avg Monthly Salary PY' =
+			VAR _pyMonths =
+			    SELECTCOLUMNS (
+			        VALUES ( HR_Data[Snapshot_Month] ),
+			        "PY Month", INT ( EDATE ( DATE ( 1899, 12, 30 ) + HR_Data[Snapshot_Month], -12 ) - DATE ( 1899, 12, 30 ) )
+			    )
+			RETURN
+			    CALCULATE (
+			        [Avg Monthly Salary],
+			        REMOVEFILTERS ( HR_Data[Year], HR_Data[Month], HR_Data[Month No], HR_Data[Snapshot_Month], HR_Data[Year Month], HR_Data[Year Quarter], HR_Data[Year Quarter No] ),
+			        TREATAS ( _pyMonths, HR_Data[Snapshot_Month] )
+			    )
+		formatString: "MYR" #,##0
+		displayFolder: 2. Pay & Performance\Previous Year
+		lineageTag: a5687cdf-dcc7-4dc8-a839-25d470804a5f
+
+	/// KPI card caption: previous-year value for Avg Monthly Salary.
+	measure 'Avg Monthly Salary PY Label' =
+			VAR _py = [Avg Monthly Salary PY]
+			RETURN
+			    "Previous Year: " & IF ( ISBLANK ( _py ), "n/a", FORMAT ( _py, """MYR"" #,##0" ) )
+		displayFolder: 2. Pay & Performance\KPI Labels
+		lineageTag: 52452d38-2e83-4071-aa52-30cef4281c08
+
+	/// KPI card delta vs previous year for Avg Monthly Salary.
+	measure 'Avg Monthly Salary Change Label' =
+			VAR _cur = [Avg Monthly Salary]
+			VAR _py = [Avg Monthly Salary PY]
+			VAR _chg = DIVIDE ( _cur - _py, _py )
+			RETURN
+			    IF ( ISBLANK ( _py ) || ISBLANK ( _cur ), BLANK (), IF ( _chg > 0, "▲ ", IF ( _chg < 0, "▼ ", "■ " ) ) & FORMAT ( ABS ( _chg ), "0.0%" ) )
+		displayFolder: 2. Pay & Performance\KPI Labels
+		lineageTag: 1087f6b0-77a6-4cf0-a199-48789ad3e1a1
+
+	/// Green when the change is favourable, red when not.
+	measure 'Avg Monthly Salary Change Color' =
+			VAR _cur = [Avg Monthly Salary]
+			VAR _py = [Avg Monthly Salary PY]
+			RETURN
+			    IF ( ISBLANK ( _py ) || ISBLANK ( _cur ), "#8C8C8C", IF ( _cur >= _py, "#008E60", "#D8211D" ) )
+		isHidden
+		displayFolder: 2. Pay & Performance\KPI Labels
+		lineageTag: ff9b49be-07f6-46b3-8370-2edc1c258daf
+
+	/// Avg Performance Rating for the same months one year earlier.
+	measure 'Avg Performance Rating PY' =
+			VAR _pyMonths =
+			    SELECTCOLUMNS (
+			        VALUES ( HR_Data[Snapshot_Month] ),
+			        "PY Month", INT ( EDATE ( DATE ( 1899, 12, 30 ) + HR_Data[Snapshot_Month], -12 ) - DATE ( 1899, 12, 30 ) )
+			    )
+			RETURN
+			    CALCULATE (
+			        [Avg Performance Rating],
+			        REMOVEFILTERS ( HR_Data[Year], HR_Data[Month], HR_Data[Month No], HR_Data[Snapshot_Month], HR_Data[Year Month], HR_Data[Year Quarter], HR_Data[Year Quarter No] ),
+			        TREATAS ( _pyMonths, HR_Data[Snapshot_Month] )
+			    )
+		formatString: 0.00
+		displayFolder: 2. Pay & Performance\Previous Year
+		lineageTag: 7e554232-8297-47aa-a3a0-a76fffd308b6
+
+	/// KPI card caption: previous-year value for Avg Performance Rating.
+	measure 'Avg Performance Rating PY Label' =
+			VAR _py = [Avg Performance Rating PY]
+			RETURN
+			    "Previous Year: " & IF ( ISBLANK ( _py ), "n/a", FORMAT ( _py, "0.00" ) )
+		displayFolder: 2. Pay & Performance\KPI Labels
+		lineageTag: 36d002d8-27dd-460c-b999-07527d80ea45
+
+	/// KPI card delta vs previous year for Avg Performance Rating.
+	measure 'Avg Performance Rating Change Label' =
+			VAR _cur = [Avg Performance Rating]
+			VAR _py = [Avg Performance Rating PY]
+			VAR _chg = DIVIDE ( _cur - _py, _py )
+			RETURN
+			    IF ( ISBLANK ( _py ) || ISBLANK ( _cur ), BLANK (), IF ( _chg > 0, "▲ ", IF ( _chg < 0, "▼ ", "■ " ) ) & FORMAT ( ABS ( _chg ), "0.0%" ) )
+		displayFolder: 2. Pay & Performance\KPI Labels
+		lineageTag: 9ad2d8b5-e742-414d-afa2-17c7114851e5
+
+	/// Green when the change is favourable, red when not.
+	measure 'Avg Performance Rating Change Color' =
+			VAR _cur = [Avg Performance Rating]
+			VAR _py = [Avg Performance Rating PY]
+			RETURN
+			    IF ( ISBLANK ( _py ) || ISBLANK ( _cur ), "#8C8C8C", IF ( _cur >= _py, "#008E60", "#D8211D" ) )
+		isHidden
+		displayFolder: 2. Pay & Performance\KPI Labels
+		lineageTag: 95973695-67b4-4591-a34e-45ccf4150cef
+
+	/// Avg Training Hours for the same months one year earlier.
+	measure 'Avg Training Hours PY' =
+			VAR _pyMonths =
+			    SELECTCOLUMNS (
+			        VALUES ( HR_Data[Snapshot_Month] ),
+			        "PY Month", INT ( EDATE ( DATE ( 1899, 12, 30 ) + HR_Data[Snapshot_Month], -12 ) - DATE ( 1899, 12, 30 ) )
+			    )
+			RETURN
+			    CALCULATE (
+			        [Avg Training Hours],
+			        REMOVEFILTERS ( HR_Data[Year], HR_Data[Month], HR_Data[Month No], HR_Data[Snapshot_Month], HR_Data[Year Month], HR_Data[Year Quarter], HR_Data[Year Quarter No] ),
+			        TREATAS ( _pyMonths, HR_Data[Snapshot_Month] )
+			    )
+		formatString: 0.00
+		displayFolder: 2. Pay & Performance\Previous Year
+		lineageTag: e2d6f4b6-5b15-4867-bab4-2f4c90038014
+
+	/// KPI card caption: previous-year value for Avg Training Hours.
+	measure 'Avg Training Hours PY Label' =
+			VAR _py = [Avg Training Hours PY]
+			RETURN
+			    "Per employee per month · " & "Previous Year: " & IF ( ISBLANK ( _py ), "n/a", FORMAT ( _py, "0.00" ) )
+		displayFolder: 2. Pay & Performance\KPI Labels
+		lineageTag: f83db8fe-a419-432f-a38c-5eb38eca3820
+
+	/// KPI card delta vs previous year for Avg Training Hours.
+	measure 'Avg Training Hours Change Label' =
+			VAR _cur = [Avg Training Hours]
+			VAR _py = [Avg Training Hours PY]
+			VAR _chg = DIVIDE ( _cur - _py, _py )
+			RETURN
+			    IF ( ISBLANK ( _py ) || ISBLANK ( _cur ), BLANK (), IF ( _chg > 0, "▲ ", IF ( _chg < 0, "▼ ", "■ " ) ) & FORMAT ( ABS ( _chg ), "0.0%" ) )
+		displayFolder: 2. Pay & Performance\KPI Labels
+		lineageTag: fd4ed267-51a4-48d5-9ca8-305d81d89659
+
+	/// Green when the change is favourable, red when not.
+	measure 'Avg Training Hours Change Color' =
+			VAR _cur = [Avg Training Hours]
+			VAR _py = [Avg Training Hours PY]
+			RETURN
+			    IF ( ISBLANK ( _py ) || ISBLANK ( _cur ), "#8C8C8C", IF ( _cur >= _py, "#008E60", "#D8211D" ) )
+		isHidden
+		displayFolder: 2. Pay & Performance\KPI Labels
+		lineageTag: 0aca6b47-96f0-4784-b5b7-d723c5ceacae
+
+	/// Avg Overtime Hours for the same months one year earlier.
+	measure 'Avg Overtime Hours PY' =
+			VAR _pyMonths =
+			    SELECTCOLUMNS (
+			        VALUES ( HR_Data[Snapshot_Month] ),
+			        "PY Month", INT ( EDATE ( DATE ( 1899, 12, 30 ) + HR_Data[Snapshot_Month], -12 ) - DATE ( 1899, 12, 30 ) )
+			    )
+			RETURN
+			    CALCULATE (
+			        [Avg Overtime Hours],
+			        REMOVEFILTERS ( HR_Data[Year], HR_Data[Month], HR_Data[Month No], HR_Data[Snapshot_Month], HR_Data[Year Month], HR_Data[Year Quarter], HR_Data[Year Quarter No] ),
+			        TREATAS ( _pyMonths, HR_Data[Snapshot_Month] )
+			    )
+		formatString: 0.00
+		displayFolder: 2. Pay & Performance\Previous Year
+		lineageTag: 087d6374-86dc-45e1-ab0b-43fbade6a778
+
+	/// KPI card caption: previous-year value for Avg Overtime Hours.
+	measure 'Avg Overtime Hours PY Label' =
+			VAR _py = [Avg Overtime Hours PY]
+			RETURN
+			    "Per employee per month · " & "Previous Year: " & IF ( ISBLANK ( _py ), "n/a", FORMAT ( _py, "0.00" ) )
+		displayFolder: 2. Pay & Performance\KPI Labels
+		lineageTag: a8388fcc-78ac-4b4f-8bdc-28fd7e1515c1
+
+	/// KPI card delta vs previous year for Avg Overtime Hours.
+	measure 'Avg Overtime Hours Change Label' =
+			VAR _cur = [Avg Overtime Hours]
+			VAR _py = [Avg Overtime Hours PY]
+			VAR _chg = DIVIDE ( _cur - _py, _py )
+			RETURN
+			    IF ( ISBLANK ( _py ) || ISBLANK ( _cur ), BLANK (), IF ( _chg > 0, "▲ ", IF ( _chg < 0, "▼ ", "■ " ) ) & FORMAT ( ABS ( _chg ), "0.0%" ) )
+		displayFolder: 2. Pay & Performance\KPI Labels
+		lineageTag: 2be06460-3a98-4dfd-bc0f-957bf0fb8fb3
+
+	/// Green when the change is favourable, red when not (lower is better).
+	measure 'Avg Overtime Hours Change Color' =
+			VAR _cur = [Avg Overtime Hours]
+			VAR _py = [Avg Overtime Hours PY]
+			RETURN
+			    IF ( ISBLANK ( _py ) || ISBLANK ( _cur ), "#8C8C8C", IF ( _cur <= _py, "#008E60", "#D8211D" ) )
+		isHidden
+		displayFolder: 2. Pay & Performance\KPI Labels
+		lineageTag: 192f7d00-dcc5-4cac-8622-add5966c574d
+
+	/// Attrition across all departments, other filters kept. Reference line on the department chart.
+	measure 'Attrition Rate Company Avg' = CALCULATE ( [Attrition Rate], REMOVEFILTERS ( HR_Data[Department] ) )
+		formatString: 0.0%
+		displayFolder: 1. Workforce
+		lineageTag: 695f3975-c3dd-41d0-a8d7-3ba37c8c305f
+
+	/// Red above company average, green otherwise.
+	measure 'Attrition Bar Color' = IF ( [Attrition Rate] > [Attrition Rate Company Avg], "#D8211D", "#008E60" )
+		isHidden
+		displayFolder: 1. Workforce\Formatting
+		lineageTag: 0ef19f8b-7aff-4f21-a538-dec110d1c5f1
+
+	/// Subtitle for the exit reasons chart.
+	measure 'Exit Type Summary' =
+			VAR _vol = CALCULATE ( [Exits], HR_Data[Exit_Type] = "Voluntary" )
+			VAR _inv = CALCULATE ( [Exits], HR_Data[Exit_Type] = "Involuntary" )
+			VAR _tot = _vol + _inv
+			RETURN
+			    FORMAT ( _tot, "#,0" ) & " exits · Voluntary " & FORMAT ( _vol, "#,0" ) & " (" & FORMAT ( DIVIDE ( _vol, _tot ), "0%" ) & ") · Involuntary "
+			        & FORMAT ( _inv, "#,0" ) & " (" & FORMAT ( DIVIDE ( _inv, _tot ), "0%" ) & ")"
+		displayFolder: 1. Workforce\Formatting
+		lineageTag: 2ae62d28-e075-4b05-965d-4065c867169d
+
+	/// Subtitle for the gender split chart.
+	measure 'Gender Subtitle' = "Active employees as of " & FORMAT ( DATE ( 1899, 12, 30 ) + MAX ( HR_Data[Snapshot_Month] ), "mmm yyyy" )
+		displayFolder: 1. Workforce\Formatting
+		lineageTag: 5de37e5d-b644-4fa9-9cad-18e1537df4bd
+
+	/// Share of end-of-period headcount in each performance rating.
+	measure 'Employees % of Total' = DIVIDE ( [Headcount], CALCULATE ( [Headcount], REMOVEFILTERS ( HR_Data[Performance_Rating], HR_Data[Rating Label] ) ) )
+		formatString: 0.0%
+		displayFolder: 2. Pay & Performance
+		lineageTag: 4cbfaa17-2ac3-42e4-ad4c-7a0bf629dc19
+
+	/// Subtitle for the rating distribution chart.
+	measure 'Rating Subtitle' = "% of active employees as of " & FORMAT ( DATE ( 1899, 12, 30 ) + MAX ( HR_Data[Snapshot_Month] ), "mmm yyyy" )
+		displayFolder: 2. Pay & Performance\Formatting
+		lineageTag: 79088b0d-7c38-45db-bded-ef356c3b5d22
+
+	/// Red for ratings 1-2, grey for 3, green for 4-5.
+	measure 'Rating Bar Color' =
+			VAR _rating = SELECTEDVALUE ( HR_Data[Performance_Rating] )
+			RETURN
+			    SWITCH ( TRUE (), _rating <= 2, "#D8211D", _rating = 3, "#BFBFBF", "#008E60" )
+		isHidden
+		displayFolder: 2. Pay & Performance\Formatting
+		lineageTag: c4368dd6-d898-4647-bb40-b37135e189de
+
+	column Column
+		formatString: 0
+		lineageTag: 138b1a4d-1cde-421f-91a0-79d65fec47ea
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _measures = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = 882f3cc294ce4bbe98623381f33d6a94
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+

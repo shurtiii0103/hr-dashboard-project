@@ -1,0 +1,276 @@
+table HR_Data
+	lineageTag: 6b45446e-fe4f-4459-975c-889d8d4a46f5
+
+	column Snapshot_Month
+		dataType: int64
+		formatString: 0
+		lineageTag: 2ce53cbd-cb1b-452e-b170-3878737fe378
+		summarizeBy: none
+		sourceColumn: Snapshot_Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: b2da9273-a70c-47f9-a083-8e70a6e1bafe
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: string
+		lineageTag: c7eebce5-b65a-4a8e-ab2f-907ae3db6e73
+		summarizeBy: none
+		sourceColumn: Month
+		sortByColumn: 'Month No'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Employee_ID
+		dataType: string
+		lineageTag: 2d5316f3-7526-4840-a6f4-8adc84c4a720
+		summarizeBy: none
+		sourceColumn: Employee_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Department
+		dataType: string
+		lineageTag: 7c548d29-a6ea-41a8-8375-a9480ce158b0
+		summarizeBy: none
+		sourceColumn: Department
+
+		annotation SummarizationSetBy = Automatic
+
+	column Job_Level
+		dataType: string
+		lineageTag: c3579f18-6355-4e86-9260-5acf6150c070
+		summarizeBy: none
+		sourceColumn: Job_Level
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gender
+		dataType: string
+		lineageTag: 73f369da-39c0-4cb8-9aa0-90cf6c1821c8
+		summarizeBy: none
+		sourceColumn: Gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column Age
+		dataType: int64
+		formatString: 0
+		lineageTag: 868edc40-5d81-4b0f-9025-f1016b3bf059
+		summarizeBy: sum
+		sourceColumn: Age
+
+		annotation SummarizationSetBy = Automatic
+
+	column Age_Band
+		dataType: string
+		lineageTag: 6f83da34-f59e-47db-a515-4b076027b59f
+		summarizeBy: none
+		sourceColumn: Age_Band
+
+		annotation SummarizationSetBy = Automatic
+
+	column Location
+		dataType: string
+		lineageTag: af5a630a-82cd-478c-afb8-8e4e8ea8fb6e
+		summarizeBy: none
+		sourceColumn: Location
+
+		annotation SummarizationSetBy = Automatic
+
+	column Employment_Type
+		dataType: string
+		lineageTag: 99fedb39-eeb8-49d5-8c1b-7c16a48c48e2
+		summarizeBy: none
+		sourceColumn: Employment_Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hire_Date
+		dataType: int64
+		formatString: 0
+		lineageTag: a801821f-91cc-48f4-9bf7-a7ea5274ed06
+		summarizeBy: sum
+		sourceColumn: Hire_Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tenure_Years
+		dataType: double
+		lineageTag: 14cdf51a-0936-4d5d-a38e-7c22c30ffd22
+		summarizeBy: sum
+		sourceColumn: Tenure_Years
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Monthly_Salary_MYR
+		dataType: int64
+		formatString: 0
+		lineageTag: 6abaa0d1-79fb-461c-a053-a0e0df4c42aa
+		summarizeBy: sum
+		sourceColumn: Monthly_Salary_MYR
+
+		annotation SummarizationSetBy = Automatic
+
+	column Performance_Rating
+		dataType: int64
+		formatString: 0
+		lineageTag: 34984302-143d-437b-9987-597d39b9b648
+		summarizeBy: none
+		sourceColumn: Performance_Rating
+
+		annotation SummarizationSetBy = Automatic
+
+	column Engagement_Score
+		dataType: double
+		lineageTag: 0cd55b9e-0357-4c02-b950-c8a7dc4fbdc8
+		summarizeBy: sum
+		sourceColumn: Engagement_Score
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Absence_Days
+		dataType: int64
+		formatString: 0
+		lineageTag: 37f0e223-2573-4f70-b75d-8dbf34fd990f
+		summarizeBy: sum
+		sourceColumn: Absence_Days
+
+		annotation SummarizationSetBy = Automatic
+
+	column Overtime_Hours
+		dataType: double
+		lineageTag: 29e0fc7a-722d-4e27-8991-d47a49f03b15
+		summarizeBy: sum
+		sourceColumn: Overtime_Hours
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Training_Hours
+		dataType: double
+		lineageTag: 23db82a6-2a5e-4ee3-af41-1b7a1fc45b0d
+		summarizeBy: sum
+		sourceColumn: Training_Hours
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column New_Hire_Flag
+		dataType: int64
+		formatString: 0
+		lineageTag: 7a62dbbf-b68f-469b-8bd2-b985f03bde83
+		summarizeBy: sum
+		sourceColumn: New_Hire_Flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column Exit_Flag
+		dataType: int64
+		formatString: 0
+		lineageTag: 70aa6bdf-24f9-4e91-9a06-648e4abb20b9
+		summarizeBy: sum
+		sourceColumn: Exit_Flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column Exit_Type
+		dataType: string
+		lineageTag: 895011f0-7157-4615-a849-5d88209af9d0
+		summarizeBy: none
+		sourceColumn: Exit_Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column Exit_Reason
+		dataType: string
+		lineageTag: eeed1fc9-6a81-43b4-a840-926b8e902e64
+		summarizeBy: none
+		sourceColumn: Exit_Reason
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Month number 1-12 derived from the Snapshot_Month serial; sort key for Month.
+	column 'Month No' = MONTH ( DATE ( 1899, 12, 30 ) + HR_Data[Snapshot_Month] )
+		dataType: int64
+		isHidden
+		lineageTag: 7f7e46b9-e940-4a42-b714-001366991377
+		summarizeBy: none
+
+	/// Snapshot month label, e.g. Jan 25. Axis for monthly trends.
+	column 'Year Month' = FORMAT ( DATE ( 1899, 12, 30 ) + HR_Data[Snapshot_Month], "mmm yy" )
+		dataType: string
+		lineageTag: 6ffc5a60-dec8-4083-8139-1c920d8353a6
+		sortByColumn: Snapshot_Month
+
+	/// YYYYQ sort key for Year Quarter.
+	column 'Year Quarter No' = HR_Data[Year] * 10 + ROUNDUP ( HR_Data[Month No] / 3, 0 )
+		dataType: int64
+		isHidden
+		lineageTag: af5c7e41-fdf4-4aa4-8e0f-250b83f80f62
+		summarizeBy: none
+
+	/// Snapshot quarter label, e.g. 2025 Q1. Drill level above Year Month.
+	column 'Year Quarter' = HR_Data[Year] & " Q" & ROUNDUP ( HR_Data[Month No] / 3, 0 )
+		dataType: string
+		lineageTag: 90421b61-0a05-49ac-8a60-cac1d488779e
+		sortByColumn: 'Year Quarter No'
+
+	/// Seniority sort key for Job_Level.
+	column 'Job Level Order' = SWITCH ( HR_Data[Job_Level], "Entry", 1, "Associate", 2, "Senior", 3, "Manager", 4, "Director", 5, 99 )
+		dataType: int64
+		isHidden
+		lineageTag: 94d6336a-faea-4d5a-a83b-87fbeaf52102
+		summarizeBy: none
+
+	/// Ascending sort key for Age_Band.
+	column 'Age Band Order' = SWITCH ( HR_Data[Age_Band], "<25", 1, "25-34", 2, "35-44", 3, "45-54", 4, "55+", 5, 99 )
+		dataType: int64
+		isHidden
+		lineageTag: 4fc51bf7-8f27-4112-bd74-62c326cdab6e
+		summarizeBy: none
+
+	/// Axis label for performance rating, e.g. 3 · Meets.
+	column 'Rating Label' = SWITCH ( HR_Data[Performance_Rating], 1, "1 · Low", 3, "3 · Meets", 5, "5 · High", FORMAT ( HR_Data[Performance_Rating], "0" ) )
+		dataType: string
+		lineageTag: 4db63cb7-cf5c-447d-a5a2-80d22b891b85
+		sortByColumn: Performance_Rating
+
+	/// Job_Level sorted by seniority (Entry to Director). Use this in visuals and slicers.
+	column 'Job Level' = HR_Data[Job_Level]
+		dataType: string
+		lineageTag: 31244132-d1c7-48cc-8006-269625b07b8a
+		sortByColumn: 'Job Level Order'
+
+	/// Age_Band sorted youngest to oldest. Use this in visuals and slicers.
+	column 'Age Band' = HR_Data[Age_Band]
+		dataType: string
+		lineageTag: 3fd220f8-0737-47b7-ab65-7fbad6e9e2ce
+		sortByColumn: 'Age Band Order'
+
+	partition HR_Data = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\ShurtiSohaney\OneDrive - SRKK Group\Desktop\7. self learning\bi project_HR dashboard\HR_Dashboard_Mock_Data.xlsx"), null, true),
+				    HR_Data_Sheet = Source{[Item="HR_Data",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(HR_Data_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Snapshot_Month", Int64.Type}, {"Year", Int64.Type}, {"Month", type text}, {"Employee_ID", type text}, {"Department", type text}, {"Job_Level", type text}, {"Gender", type text}, {"Age", Int64.Type}, {"Age_Band", type text}, {"Location", type text}, {"Employment_Type", type text}, {"Hire_Date", Int64.Type}, {"Tenure_Years", type number}, {"Monthly_Salary_MYR", Int64.Type}, {"Performance_Rating", Int64.Type}, {"Engagement_Score", type number}, {"Absence_Days", Int64.Type}, {"Overtime_Hours", type number}, {"Training_Hours", type number}, {"New_Hire_Flag", Int64.Type}, {"Exit_Flag", Int64.Type}, {"Exit_Type", type text}, {"Exit_Reason", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

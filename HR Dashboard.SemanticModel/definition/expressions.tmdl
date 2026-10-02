@@ -1,0 +1,4 @@
+/// Full path to the HR mock data workbook (sheet HR_Data).
+expression 'Source File Path' = "C:\Users\ShurtiSohaney\OneDrive - SRKK Group\Desktop\7. self learning\bi project_HR dashboard\HR_Dashboard_Mock_Data.xlsx" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 12a8726d-a77f-4f09-8491-f70e818be358
+
