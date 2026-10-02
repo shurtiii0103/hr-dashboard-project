@@ -6,20 +6,59 @@ A two-page **Power BI** HR dashboard taken from raw mock data to a documented, v
 
 ---
 
-## 📊 The dashboard
-
-<!-- PLACEHOLDER: upload Power BI screenshots to /images with these exact names -->
+## 📊 The Dashboard
+ 
+This Power BI dashboard is split into two pages, providing an overview of workforce trends, employee engagement, compensation, and performance metrics.
+ 
 | Workforce Overview | Pay & Performance |
 |-------------------|-------------------|
 | ![Workforce Overview](https://github.com/user-attachments/assets/819dd6c4-8e33-43a2-a446-7cc58b3e62ca) | ![Pay & Performance](https://github.com/user-attachments/assets/830280e8-3431-479f-ac55-320d05566844) |
-**Page 1: Workforce Overview.** KPIs: Headcount · Attrition Rate · Avg Absence Days · Avg Engagement Score, each compared with the previous year.
-Visuals: headcount trend with hires and exits (quarter → month drill) · attrition by department vs company average · gender split by job level · exit reasons (voluntary / involuntary).
-
-**Page 2: Pay & Performance.** KPIs: Avg Monthly Salary · Avg Performance Rating · Avg Training Hours · Avg Overtime Hours, each compared with the previous year.
-Visuals: salary by job level and gender · performance rating distribution · attrition and engagement by rating · training vs overtime by department.
-
-**Filters (synced across pages):** Year · Month · Department · Job Level · Gender · Age Band · Location · Employment Type · Reset.
-
+ 
+### 📈 Workforce Overview
+ 
+**Key KPIs**
+- Headcount
+- Attrition Rate
+- Average Absence Days
+- Average Engagement Score
+ 
+**Visuals**
+- Headcount trend with hires and exits (quarter → month drill-through)
+- Attrition by department vs company average
+- Gender distribution by job level
+- Exit reasons (voluntary vs involuntary)
+ 
+---
+ 
+### 💰 Pay & Performance
+ 
+**Key KPIs**
+- Average Monthly Salary
+- Average Performance Rating
+- Average Training Hours
+- Average Overtime Hours
+ 
+**Visuals**
+- Salary by job level and gender
+- Performance rating distribution
+- Attrition and engagement by rating
+- Training vs overtime hours by department
+ 
+---
+ 
+### 🔍 Global Filters
+ 
+The following filters are synchronized across both pages:
+ 
+- Year
+- Month
+- Department
+- Job Level
+- Gender
+- Age Band
+- Location
+- Employment Type
+- Reset Filters
 ---
 
 ## 🤖 How I built it: agentic development with Claude
