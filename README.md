@@ -33,7 +33,7 @@ Static mockups don't show how a dashboard *feels*, so Claude rebuilt the design 
 |---|---|
 | ![HTML wireframe page 1](https://github.com/user-attachments/assets/b1000647-d625-4f78-9aa6-306d5093dd04) | ![HTML wireframe page 2](https://github.com/user-attachments/assets/2efe6aed-b037-49cb-aaa4-6660ebd67e0a) |
 
-▶️ Try it: download [`hr_dashboard_wireframe.html`](hr_dashboard_wireframe.html) and open it in any browser.
+▶️ Try it: download [`hr_dashboard_wireframe.html`](https://claude.ai/artifact/QeDPSj9JyFBynVjxPSvS8v) and open it in any browser.
 
 ### 4 · User testing
 Users tested the prototype before any Power BI work started. Their feedback was applied in minutes:
