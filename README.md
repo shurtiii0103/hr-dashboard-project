@@ -11,10 +11,10 @@ A two-page **Power BI** HR dashboard taken from raw mock data to a documented, v
 <!-- PLACEHOLDER: upload Power BI screenshots to /images with these exact names -->
 | Workforce Overview | Pay & Performance |
 |---|---|
-| ![Workforce Overview] <img width="1920" height="1080" alt="wireframe-html-page1" src="https://github.com/user-attachments/assets/819dd6c4-8e33-43a2-a446-7cc58b3e62ca" />
-| ![Pay & Performance]<img width="1920" height="1080" alt="wireframe-html-page2" src="https://github.com/user-attachments/assets/830280e8-3431-479f-ac55-320d05566844" />
- |
-
+| Dashboard Page | Preview |
+|----------------|---------|
+| Workforce Overview | ![Workforce Overview](https://github.com/user-attachments/assets/819dd6c4-8e33-43a2-a446-7cc58b3e62ca) |
+| Pay & Performance | ![Pay & Performance](https://github.com/user-attachments/assets/830280e8-3431-479f-ac55-320d05566844) |
 **Page 1: Workforce Overview.** KPIs: Headcount · Attrition Rate · Avg Absence Days · Avg Engagement Score, each compared with the previous year.
 Visuals: headcount trend with hires and exits (quarter → month drill) · attrition by department vs company average · gender split by job level · exit reasons (voluntary / involuntary).
 
