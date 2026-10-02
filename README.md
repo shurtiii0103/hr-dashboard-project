@@ -13,21 +13,7 @@ A two-page **Power BI** HR dashboard taken from raw mock data to a documented, v
 | **KPIs**<br><br>• Headcount<br>• Attrition Rate<br>• Avg Absence Days<br>• Avg Engagement Score<br><br>Each KPI is compared with the previous year. | **KPIs**<br><br>• Avg Monthly Salary<br>• Avg Performance Rating<br>• Avg Training Hours<br>• Avg Overtime Hours<br><br>Each KPI is compared with the previous year. |
 | **Visuals**<br><br>• Headcount trend with hires and exits, with quarter-to-month drill<br>• Attrition by department vs company average<br>• Gender split by job level<br>• Exit reasons by voluntary and involuntary exits | **Visuals**<br><br>• Salary by job level and gender<br>• Performance rating distribution<br>• Attrition and engagement by rating<br>• Training vs overtime by department |
 | **Synced filters:** Year · Month · Department · Job Level · Gender · Age Band · Location · Employment Type · Reset | **Synced filters:** Year · Month · Department · Job Level · Gender · Age Band · Location · Employment Type · Reset |
----
- 
-### 🔍 Global Filters
- 
-The following filters are synchronized across both pages:
- 
-- Year
-- Month
-- Department
-- Job Level
-- Gender
-- Age Band
-- Location
-- Employment Type
-- Reset Filters
+ 
 ---
 
 ## 🤖 How I built it: agentic development with Claude
